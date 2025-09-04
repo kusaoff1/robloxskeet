@@ -15,8 +15,8 @@ ScreenGui.ResetOnSpawn = false
 
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 300, 0, 360)
-MainFrame.Position = UDim2.new(0.5, -150, 0.5, -180)
+MainFrame.Size = UDim2.new(0, 300, 0, 420) -- Увеличена высота
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -210) -- Сдвинуто ниже
 MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
 MainFrame.BorderSizePixel = 0
@@ -204,6 +204,7 @@ local speedHackConnection = nil
 local antiAimSpeed = 15
 local jumpPower = 50
 local speedHackMultiplier = 2
+local bhopSpeed = 50 -- Новая переменная для скорости банихопа
 
 local function applySpeedHack()
     if not character or not humanoid or not rootPart then return end
@@ -264,9 +265,9 @@ local function applyBunnyHop()
         
         if moveDirection.Magnitude > 0 then
             local newVelocity = Vector3.new(
-                moveDirection.X * 50,
+                moveDirection.X * bhopSpeed, -- Используем переменную bhopSpeed
                 currentVelocity.Y,
-                moveDirection.Z * 50
+                moveDirection.Z * bhopSpeed  -- Используем переменную bhopSpeed
             )
             rootPart.Velocity = newVelocity
         end
@@ -383,15 +384,20 @@ end)
 
 getCharacter()
 
+-- Создание UI элементов с новыми позициями
 local bhopToggle = createToggle("Bunny hop", UDim2.new(0, 10, 0, 40), MainFrame, function(state)
     bhopEnabled = state
 end)
 
-local airJumpToggle = createToggle("Air Jump", UDim2.new(0, 10, 0, 70), MainFrame, function(state)
+local bhopSpeedSlider = createSlider("Bhop Speed", UDim2.new(0, 10, 0, 70), MainFrame, 10, 100, 50, function(value)
+    bhopSpeed = value
+end)
+
+local airJumpToggle = createToggle("Air Jump", UDim2.new(0, 10, 0, 110), MainFrame, function(state)
     airJumpEnabled = state
 end)
 
-local forceJumpToggle = createToggle("Force Jump", UDim2.new(0, 10, 0, 100), MainFrame, function(state)
+local forceJumpToggle = createToggle("Force Jump", UDim2.new(0, 10, 0, 140), MainFrame, function(state)
     forceJumpEnabled = state
     
     if state then
@@ -412,7 +418,7 @@ local forceJumpToggle = createToggle("Force Jump", UDim2.new(0, 10, 0, 100), Mai
     end
 end)
 
-local noRagdollToggle = createToggle("No Ragdoll", UDim2.new(0, 10, 0, 130), MainFrame, function(state)
+local noRagdollToggle = createToggle("No Ragdoll", UDim2.new(0, 10, 0, 170), MainFrame, function(state)
     noRagdollEnabled = state
     
     if state then
@@ -431,7 +437,7 @@ local noRagdollToggle = createToggle("No Ragdoll", UDim2.new(0, 10, 0, 130), Mai
     end
 end)
 
-local allowMoveToggle = createToggle("Allow Move", UDim2.new(0, 10, 0, 160), MainFrame, function(state)
+local allowMoveToggle = createToggle("Allow Move", UDim2.new(0, 10, 0, 200), MainFrame, function(state)
     allowMoveEnabled = state
     
     if state then
@@ -450,7 +456,7 @@ local allowMoveToggle = createToggle("Allow Move", UDim2.new(0, 10, 0, 160), Mai
     end
 end)
 
-local antiAimToggle = createToggle("Anti Aim", UDim2.new(0, 10, 0, 190), MainFrame, function(state)
+local antiAimToggle = createToggle("Anti Aim", UDim2.new(0, 10, 0, 230), MainFrame, function(state)
     antiAimEnabled = state
     
     if state then
@@ -461,7 +467,7 @@ local antiAimToggle = createToggle("Anti Aim", UDim2.new(0, 10, 0, 190), MainFra
     end
 end)
 
-local speedHackToggle = createToggle("Speed Hack", UDim2.new(0, 10, 0, 220), MainFrame, function(state)
+local speedHackToggle = createToggle("Speed Hack", UDim2.new(0, 10, 0, 260), MainFrame, function(state)
     speedHackEnabled = state
     
     if state then
@@ -480,23 +486,23 @@ local speedHackToggle = createToggle("Speed Hack", UDim2.new(0, 10, 0, 220), Mai
     end
 end)
 
-local noCollisionToggle = createToggle("No Collision Click", UDim2.new(0, 10, 0, 250), MainFrame, function(state)
+local noCollisionToggle = createToggle("No Collision Click", UDim2.new(0, 10, 0, 290), MainFrame, function(state)
     noCollisionEnabled = state
 end)
 
-local antiAimSpeedSlider = createSlider("Anti Aim Speed", UDim2.new(0, 10, 0, 280), MainFrame, 1, 50, 15, function(value)
+local antiAimSpeedSlider = createSlider("Anti Aim Speed", UDim2.new(0, 10, 0, 320), MainFrame, 1, 50, 15, function(value)
     antiAimSpeed = value
 end)
 
-local speedHackSlider = createSlider("Speed Hack Multiplier", UDim2.new(0, 10, 0, 310), MainFrame, 1, 10, 2, function(value)
+local speedHackSlider = createSlider("Speed Hack Multiplier", UDim2.new(0, 10, 0, 350), MainFrame, 1, 10, 2, function(value)
     speedHackMultiplier = value
 end)
 
-createButton("Give Gun (Sword)", UDim2.new(0, 10, 0, 350), MainFrame, function()
+createButton("Give Gun (Sword)", UDim2.new(0, 10, 0, 380), MainFrame, function()
     giveSword()
 end)
 
-createButton("Unload", UDim2.new(0, 10, 0, 385), MainFrame, function()
+createButton("Unload", UDim2.new(0, 10, 0, 415), MainFrame, function()
     ScreenGui:Destroy()
 end)
 
@@ -546,7 +552,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         MainFrame.Visible = menuVisible
         
         if menuVisible then
-            MainFrame.Position = UDim2.new(0.5, -150, 0.5, -180)
+            MainFrame.Position = UDim2.new(0.5, -150, 0.5, -210)
         end
     end
     
