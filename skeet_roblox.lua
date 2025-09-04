@@ -46,6 +46,7 @@ local function createToggle(text, position, parent, callback)
     toggle.Position = UDim2.new(0, 0, 0, 0)
     toggle.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
     toggle.Text = ""
+    toggle.AutoButtonColor = false
     toggle.Parent = toggleFrame
     
     local toggleText = Instance.new("TextLabel")
@@ -85,6 +86,7 @@ local function createButton(text, position, parent, callback)
     button.TextColor3 = Color3.fromRGB(200, 200, 200)
     button.Font = Enum.Font.Gotham
     button.TextSize = 12
+    button.AutoButtonColor = false
     button.Parent = parent
     
     button.MouseButton1Click:Connect(function()
@@ -134,6 +136,7 @@ local function createSlider(text, position, parent, min, max, default, callback)
     handle.Position = UDim2.new((default - min) / (max - min), -5, 0, -5)
     handle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     handle.Text = ""
+    handle.AutoButtonColor = false
     handle.Parent = track
     
     local value = default
