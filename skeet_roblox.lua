@@ -465,7 +465,6 @@ local antiAimToggle = createToggle("Anti Aim", UDim2.new(0, 10, 0, 230), MainFra
         startAntiAim()
     elseif antiAimConnection then
         antiAimConnection:Disconnect()
-        antiAimConnection = nil
     end
 end)
 
