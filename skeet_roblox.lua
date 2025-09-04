@@ -41,11 +41,12 @@ local function createToggle(text, position, parent, callback)
     toggleFrame.BackgroundTransparency = 1
     toggleFrame.Parent = parent
     
-    local toggle = Instance.new("Frame")
+    local toggle = Instance.new("TextButton")
     toggle.Size = UDim2.new(0, 20, 0, 20)
     toggle.Position = UDim2.new(0, 0, 0, 0)
     toggle.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
-    toggle.BorderSizePixel = 0
+    toggle.Text = ""
+    toggle.AutoButtonColor = false
     toggle.Parent = toggleFrame
     
     local toggleText = Instance.new("TextLabel")
@@ -77,7 +78,7 @@ local function createToggle(text, position, parent, callback)
 end
 
 local function createButton(text, position, parent, callback)
-    local button = Instance.new("TextLabel")
+    local button = Instance.new("TextButton")
     button.Size = UDim2.new(1, -20, 0, 25)
     button.Position = position
     button.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
@@ -85,7 +86,7 @@ local function createButton(text, position, parent, callback)
     button.TextColor3 = Color3.fromRGB(200, 200, 200)
     button.Font = Enum.Font.Gotham
     button.TextSize = 12
-    button.TextXAlignment = Enum.TextXAlignment.Center
+    button.AutoButtonColor = false
     button.Parent = parent
     
     button.MouseButton1Click:Connect(function()
@@ -130,29 +131,43 @@ local function createSlider(text, position, parent, min, max, default, callback)
     fill.BorderSizePixel = 0
     fill.Parent = track
     
-    local handle = Instance.new("Frame")
+    local handle = Instance.new("TextButton")
     handle.Size = UDim2.new(0, 10, 0, 15)
     handle.Position = UDim2.new((default - min) / (max - min), -5, 0, -5)
     handle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    handle.BorderSizePixel = 0
+    handle.Text = ""
+    handle.AutoButtonColor = false
     handle.Parent = track
     
     local value = default
+    local dragging = false
     
-    track.MouseButton1Down:Connect(function()
-        local mousePos = UserInputService:GetMouseLocation()
-        local trackAbsolutePos = track.AbsolutePosition
-        local trackAbsoluteSize = track.AbsoluteSize
-        
-        local relativeX = math.clamp((mousePos.X - trackAbsolutePos.X) / trackAbsoluteSize.X, 0, 1)
-        value = math.floor(min + (max - min) * relativeX)
-        
-        fill.Size = UDim2.new(relativeX, 0, 1, 0)
-        handle.Position = UDim2.new(relativeX, -5, 0, -5)
-        sliderText.Text = text .. ": " .. value
-        
-        if callback then
-            callback(value)
+    handle.MouseButton1Down:Connect(function()
+        dragging = true
+    end)
+    
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local mousePos = UserInputService:GetMouseLocation()
+            local trackAbsolutePos = track.AbsolutePosition
+            local trackAbsoluteSize = track.AbsoluteSize
+            
+            local relativeX = math.clamp((mousePos.X - trackAbsolutePos.X) / trackAbsoluteSize.X, 0, 1)
+            value = math.floor(min + (max - min) * relativeX)
+            
+            fill.Size = UDim2.new(relativeX, 0, 1, 0)
+            handle.Position = UDim2.new(relativeX, -5, 0, -5)
+            sliderText.Text = text .. ": " .. value
+            
+            if callback then
+                callback(value)
+            end
         end
     end)
     
