@@ -15,8 +15,8 @@ ScreenGui.ResetOnSpawn = false
 
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 300, 0, 420) -- Увеличена высота
-MainFrame.Position = UDim2.new(0.5, -150, 0.5, -210) -- Сдвинуто ниже
+MainFrame.Size = UDim2.new(0, 300, 0, 500)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -250)
 MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
 MainFrame.BorderSizePixel = 0
@@ -204,7 +204,7 @@ local speedHackConnection = nil
 local antiAimSpeed = 15
 local jumpPower = 50
 local speedHackMultiplier = 2
-local bhopSpeed = 50 -- Новая переменная для скорости банихопа
+local bhopSpeed = 50
 
 local function applySpeedHack()
     if not character or not humanoid or not rootPart then return end
@@ -265,9 +265,9 @@ local function applyBunnyHop()
         
         if moveDirection.Magnitude > 0 then
             local newVelocity = Vector3.new(
-                moveDirection.X * bhopSpeed, -- Используем переменную bhopSpeed
+                moveDirection.X * bhopSpeed,
                 currentVelocity.Y,
-                moveDirection.Z * bhopSpeed  -- Используем переменную bhopSpeed
+                moveDirection.Z * bhopSpeed
             )
             rootPart.Velocity = newVelocity
         end
@@ -384,7 +384,6 @@ end)
 
 getCharacter()
 
--- Создание UI элементов с новыми позициями
 local bhopToggle = createToggle("Bunny hop", UDim2.new(0, 10, 0, 40), MainFrame, function(state)
     bhopEnabled = state
 end)
@@ -516,14 +515,10 @@ mouse.Button1Down:Connect(function()
 end)
 
 local dragging = false
-local dragStart = Vector2.new(0, 0)
-local frameStart = Vector2.new(0, 0)
 
 Title.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
         dragging = true
-        dragStart = Vector2.new(input.Position.X, input.Position.Y)
-        frameStart = Vector2.new(MainFrame.Position.X.Scale, MainFrame.Position.Y.Scale)
     end
 end)
 
@@ -535,12 +530,8 @@ end)
 
 UserInputService.InputChanged:Connect(function(input)
     if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
-        local mousePos = Vector2.new(mouse.X, mouse.Y)
-        local viewportSize = workspace.CurrentCamera.ViewportSize
-        local newX = mousePos.X / viewportSize.X
-        local newY = mousePos.Y / viewportSize.Y
-        
-        MainFrame.Position = UDim2.new(newX, 0, newY, 0)
+        local delta = input.Delta
+        MainFrame.Position = MainFrame.Position + UDim2.new(0, delta.X, 0, delta.Y)
     end
 end)
 
@@ -550,10 +541,6 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if input.KeyCode == menuKey then
         menuVisible = not menuVisible
         MainFrame.Visible = menuVisible
-        
-        if menuVisible then
-            MainFrame.Position = UDim2.new(0.5, -150, 0.5, -210)
-        end
     end
     
     if airJumpEnabled and input.KeyCode == Enum.KeyCode.Space then
